@@ -1,0 +1,218 @@
+---
+title: "Fisher's exact tests"
+author: "Laura Toribio-Celestino"
+date: '2022-09-29'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+
+### Number of RefSeq strains
+
+```{r}
+df <- data.frame(
+  horizontal <- rep(c("Kcaps+pO", "Kcaps-pO", "Kcaps+pl", "Kcaps-pl"), each=4),
+  vertical <- rep(c("Kpn+", "Ec+", "Kpn-", "Ec-"), 4),
+  values <- c(46,1,639,116,0,5,30,1463,630,105,55,12,27,1102,3,366)
+)
+colnames(df) <- c("capsules", "spp_carrying", "numbers")
+
+capsules <- c("Kcaps+pO", "Kcaps-pO", "Kcaps+pl", "Kcaps-pl")
+
+stacked <- ggplot(df, aes(x=capsules, y=numbers)) + geom_col(aes(fill = factor(spp_carrying, levels=c("Ec-", "Kpn-", "Ec+", "Kpn+"))), width = 0.3) + theme_bw() + scale_x_discrete(limits = capsules)
+stacked
+```
+
+### Fisher's exact tests
+
+#### *E. coli* and *K. pneumoniae* carrying pOXA-48 in the RefSeq database
+
+```{r}
+caps <- rbind(c(47, 755), c(5, 1493))
+colnames(caps) <- c("pOXA48", "no_pOXA48")
+rownames(caps) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps
+fisher.test(caps)
+```
+
+#### *E. coli* carrying pOXA-48 in the RefSeq database
+
+```{r}
+caps_ec <- rbind(c(1, 116), c(5, 1463))
+colnames(caps_ec) <- c("pOXA48", "no_pOXA48")
+rownames(caps_ec) <- c("Ec_with_kpn_capsule", "Ec_no_kpn_capsule")
+caps_ec
+fisher.test(caps_ec)
+```
+
+#### *K. pneumoniae* carrying pOXA-48 in the RefSeq database
+
+```{r}
+caps_kpn <- rbind(c(46, 639), c(0, 30))
+colnames(caps_kpn) <- c("pOXA48", "no_pOXA48")
+rownames(caps_kpn) <- c("Kpn_with_kpn_capsule", "Kpn_no_kpn_capsule")
+caps_kpn
+fisher.test(caps_kpn)
+```
+
+#### *E. coli* and *K. pneumoniae* carrying plasmids in the RefSeq database
+
+```{r}
+caps_p <- rbind(c(735, 67), c(1129, 369))
+colnames(caps_p) <- c("plasmids", "no_plasmids")
+rownames(caps_p) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps_p
+fisher.test(caps_p)
+```
+
+#### *E. coli* carrying plasmids in the RefSeq database
+
+```{r}
+caps_p_ec <- rbind(c(105, 12), c(1102, 366))
+colnames(caps_p_ec) <- c("plasmids", "no_plasmids")
+rownames(caps_p_ec) <- c("Ec_with_kpn_capsule", "Ec_no_kpn_capsule")
+caps_p_ec
+fisher.test(caps_p_ec)
+```
+
+#### *K. pneumoniae* carrying plasmids in the RefSeq database
+
+```{r}
+caps_p_kpn <- rbind(c(630, 55), c(27, 3))
+colnames(caps_p_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps_p_kpn) <- c("Kpn_with_kpn_capsule", "Kpn_no_kpn_capsule")
+caps_p_kpn
+fisher.test(caps_p_kpn)
+```
+
+
+
+### Number of strains per number of plasmids in *E. coli* and *K. pnaumoniae* from RefSeq
+
+The number of strains carrying 0-5 plasmids is >100. For >5 plasmids, the number of strains drops below 100. Therefore, for the next figure, Fisher's tests were performed for 0-5 and ≥6 number of plasmids.
+
+```{r}
+plasmidsrefseq <- rbind(c(0, 442), c(1, 443), c(2, 451), c(3, 325), c(4, 250), c(5, 191), c(6, 97), c(7, 58), c(8, 28), c(9, 11), c(10, 9), c(11, 6), c(12, 2), c(13, 2))
+colnames(plasmidsrefseq) <- c("num_plasmids", "num_strains")
+plasmidsrefseq <- as.data.frame(plasmidsrefseq)
+plot(plasmidsrefseq)
+```
+
+
+### Odds ratio by number of plasmids in RefSeq database
+
+```{r}
+# Ec+Kpn
+caps.p0 <- rbind(c(67, 735), c(369, 1129))
+colnames(caps.p0) <- c("plasmids", "no_plasmids")
+rownames(caps.p0) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f0 <- fisher.test(caps.p0)
+caps.p1 <- rbind(c(89, 713), c(353, 1145))
+colnames(caps.p1) <- c("plasmids", "no_plasmids")
+rownames(caps.p1) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f1 <- fisher.test(caps.p1)
+caps.p2 <- rbind(c(157, 645), c(294, 1204))
+colnames(caps.p2) <- c("plasmids", "no_plasmids")
+rownames(caps.p2) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f2 <- fisher.test(caps.p2)
+caps.p3 <- rbind(c(150, 652), c(173, 1325))
+colnames(caps.p3) <- c("plasmids", "no_plasmids")
+rownames(caps.p3) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f3 <- fisher.test(caps.p3)
+caps.p4 <- rbind(c(129, 673), c(120, 1378))
+colnames(caps.p4) <- c("plasmids", "no_plasmids")
+rownames(caps.p4) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f4 <- fisher.test(caps.p4)
+caps.p5 <- rbind(c(103, 699), c(84, 1414))
+colnames(caps.p5) <- c("plasmids", "no_plasmids")
+rownames(caps.p5) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f5 <- fisher.test(caps.p5)
+caps.p6plus <- rbind(c(107, 695), c(105, 1393))
+colnames(caps.p6plus) <- c("plasmids", "no_plasmids")
+rownames(caps.p6plus) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f6plus <- fisher.test(caps.p6plus)
+# Ec
+caps.p0_ec <- rbind(c(12, 105), c(366, 1102))
+colnames(caps.p0_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p0_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f0_ec <- fisher.test(caps.p0_ec)
+caps.p1_ec <- rbind(c(7, 110), c(351, 1117))
+colnames(caps.p1_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p1_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f1_ec <- fisher.test(caps.p1_ec)
+caps.p2_ec <- rbind(c(24, 93), c(288, 1180))
+colnames(caps.p2_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p2_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f2_ec <- fisher.test(caps.p2_ec)
+caps.p3_ec <- rbind(c(26, 91), c(169, 1299))
+colnames(caps.p3_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p3_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f3_ec <- fisher.test(caps.p3_ec)
+caps.p4_ec <- rbind(c(18, 99), c(114, 1354))
+colnames(caps.p4_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p4_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f4_ec <- fisher.test(caps.p4_ec)
+caps.p5_ec <- rbind(c(14, 103), c(82, 1386))
+colnames(caps.p5_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p5_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f5_ec <- fisher.test(caps.p5_ec)
+caps.p6plus_ec <- rbind(c(16, 101), c(98, 1370))
+colnames(caps.p6plus_ec) <- c("plasmids", "no_plasmids")
+rownames(caps.p6plus_ec) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f6plus_ec <- fisher.test(caps.p6plus_ec)
+# Kpn
+caps.p0_kpn <- rbind(c(55, 630), c(3, 27))
+colnames(caps.p0_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p0_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f0_kpn <- fisher.test(caps.p0_kpn)
+caps.p1_kpn <- rbind(c(82, 603), c(2, 28))
+colnames(caps.p1_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p1_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f1_kpn <- fisher.test(caps.p1_kpn)
+caps.p2_kpn <- rbind(c(133, 552), c(6, 24))
+colnames(caps.p2_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p2_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f2_kpn <- fisher.test(caps.p2_kpn)
+caps.p3_kpn <- rbind(c(124, 561), c(4, 26))
+colnames(caps.p3_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p3_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f3_kpn <- fisher.test(caps.p3_kpn)
+caps.p4_kpn <- rbind(c(111, 574), c(6, 24))
+colnames(caps.p4_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p4_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f4_kpn <- fisher.test(caps.p4_kpn)
+caps.p5_kpn <- rbind(c(89, 596), c(2, 28))
+colnames(caps.p5_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p5_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f5_kpn <- fisher.test(caps.p5_kpn)
+caps.p6plus_kpn <- rbind(c(91, 594), c(7, 23))
+colnames(caps.p6plus_kpn) <- c("plasmids", "no_plasmids")
+rownames(caps.p6plus_kpn) <- c("with_kpn_capsule", "no_kpn_capsule")
+caps.f6plus_kpn <- fisher.test(caps.p6plus_kpn)
+
+plas_odds_caps <- rbind(c(0, caps.f0$estimate), c(1, caps.f1$estimate), c(2, caps.f2$estimate), c(3, caps.f3$estimate), c(4, caps.f4$estimate), c(5, caps.f5$estimate), c(6, caps.f6plus$estimate))
+colnames(plas_odds_caps) <- c("num_plasmids", "odds_ratio")
+plas_odds_caps <- as.data.frame(plas_odds_caps)
+#plot(plas_odds_caps)
+
+plas_odds_caps_ec <- rbind(c(0, caps.f0_ec$estimate), c(1, caps.f1_ec$estimate), c(2, caps.f2_ec$estimate), c(3, caps.f3_ec$estimate), c(4, caps.f4_ec$estimate), c(5, caps.f5_ec$estimate), c(6, caps.f6plus_ec$estimate))
+colnames(plas_odds_caps_ec) <- c("num_plasmids", "odds_ratio")
+plas_odds_caps_ec <- as.data.frame(plas_odds_caps_ec)
+#plot(plas_odds_caps_ec)
+
+plas_odds_caps_kpn <- rbind(c(0, caps.f0_kpn$estimate), c(1, caps.f1_kpn$estimate), c(2, caps.f2_kpn$estimate), c(3, caps.f3_kpn$estimate), c(4, caps.f4_kpn$estimate), c(5, caps.f5_kpn$estimate), c(6, caps.f6plus_kpn$estimate))
+colnames(plas_odds_caps_kpn) <- c("num_plasmids", "odds_ratio")
+plas_odds_caps_kpn <- as.data.frame(plas_odds_caps_kpn)
+#plot(plas_odds_caps_kpn)
+
+g <- ggplot() + geom_hline(yintercept = 1, color = "gray55", linetype = "dashed") +
+  geom_point(data = plas_odds_caps_ec, aes(factor(num_plasmids), odds_ratio), fill = "indianred1", color = "black", size = 4, shape = 21, alpha = 0.7) +
+  geom_point(data = plas_odds_caps_kpn, aes(factor(num_plasmids), odds_ratio), fill = "skyblue", color = "black", size = 4, shape = 21, alpha = 0.7) +
+  #geom_point(data = plas_odds_caps, aes(factor(num_plasmids), odds_ratio), fill = "gray40", color = "black", size = 4.8, shape = 21, alpha = 0.7) +
+  theme_bw() + xlab("Number of plasmids") + ylab("Odds ratio") + theme(axis.text=element_text(size=12))
+g
+```
