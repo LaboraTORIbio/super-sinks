@@ -5,8 +5,8 @@ rmsyssum <- read.csv("RM_sys_sum.csv", row.names=1)
 defsys <- read.csv("defensesys.csv", row.names=1)
 plasreps <- read.csv("summary_reps.tsv", row.names=1, header=TRUE, sep="\t", check.names=FALSE)
 plasreps <- t(plasreps)
-order <- c("PF_EC19", "PF_EC22", "PF_EC12", "PF_EC07", "PF_EC02", "PF_EC03", "PF_EC10", "PF_EC21", "PF_EC16", "PF_EC25",
-                "PF_KPN10", "PF_KPN14", "PF_KPN01", "PF_KPN16", "PF_KQ01", "PF_KPN09", "PF_KPN12", "PF_KPN02", "PF_KPN11", "PF_KQ04")
+order <- c("PF_EC02", "PF_EC22", "PF_EC07", "PF_EC19", "PF_EC12", "PF_EC03", "PF_EC10", "PF_EC21", "PF_EC16", "PF_EC25",
+                "PF_KPN10", "PF_KPN01", "PF_KPN16", "PF_KQ01", "PF_KPN14", "PF_KPN12", "PF_KPN09", "PF_KPN11", "PF_KPN02", "PF_KQ04")
 
 rmsys <- rmsys[, order]
 rmsyssum <- rmsyssum[, order]
