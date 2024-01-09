@@ -2,7 +2,7 @@
 
 Code and bioinformatic methods for the manuscript:
 
-Aida Alonso-del Valle, Laura Toribio-Celestino, Anna Quirant, Carles Tardio Pi, Javier DelaFuente, Rafael Canton, Eduardo Rocha, Carles Ubeda, Rafael Peña-Miller, Alvaro San Millan. **Differences in vertical and horizontal transmission dynamics shape plasmid distribution in clinical enterobacteria.** bioRxiv. doi: https://doi.org/10.1101/2023.04.03.535338 
+Aida Alonso-del Valle, Laura Toribio-Celestino, Anna Quirant, Carles Tardio Pi, Javier DelaFuente, Rafael Canton, Eduardo Rocha, Carles Ubeda, Rafael Peña-Miller, Alvaro San Millan (2023) **Antimicrobial resistance level and conjugation permissiveness shape plasmid distribution in clinical enterobacteria**. *Proc Natl Acad Sci USA*. 120 (51), e2314135120. https://doi.org/10.1073/pnas.2314135120
 
 * The bioinformatics workflow is described in the main file `super-sinks.md`
 * Directory `amr_mic_fold_change` includes necessary files and scripts to generate Supplementary Figure 2.
